@@ -11,7 +11,7 @@ export default class CodeEditor {
         if(this._editor !== null) return;
         this._editor = monaco.editor.create(container, {
             value: "",
-            language: "javascript",
+            language: "typescript",
             theme: "vs-dark",
             automaticLayout: true,
             scrollbar: {
