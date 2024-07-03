@@ -1,4 +1,5 @@
 import {
+    Card,
     List,
     // ListItem,
     ListItemButton,
@@ -13,11 +14,16 @@ import FileExplorer from "../../components/FileExplorer";
 
 const WorkSpaceLayout: React.FC = () => {
     const [explorerState, setExplorerState] = useState(false);
+
+    const toggleDrawer = (): void => {
+        setExplorerState(!explorerState);
+    }
+
     return (
         <>
             <div className="h-svh w-svw flex">
                 <div className="z-[9999]">
-                    <Paper elevation={3} className="h-full" square>
+                    <div className="h-full bg-[#272822]">
                         <List component="div" disablePadding>
                             <ListItemButton
                                 selected={explorerState}
@@ -36,14 +42,14 @@ const WorkSpaceLayout: React.FC = () => {
                                         },
                                     },
                                 }}
-                                onClick={() => setExplorerState(!explorerState)}
+                                onClick={toggleDrawer}
                             >
                                 <ListItemIcon style={{ minWidth: 0 }}>
                                     <FileCopyTwoToneIcon fontSize="medium" />
                                 </ListItemIcon>
                             </ListItemButton>
                         </List>
-                    </Paper>
+                    </div>
                 </div>
                 <div className="flex-grow flex">
                     <SwipeableDrawer
@@ -70,10 +76,14 @@ const WorkSpaceLayout: React.FC = () => {
                             },
                         }}
                     >
+                        <div className="bg-[#222218] px-3 py-2">
+                            <div className="text-[0.7rem]">EXPLORER</div>
+                        </div>
                         <FileExplorer />
                     </SwipeableDrawer>
                     <div className=" flex-grow h-full">
                         <Outlet />
+                        {/* <div className="h-full w-full bg-red-500"></div> */}
                     </div>
                 </div>
             </div>
