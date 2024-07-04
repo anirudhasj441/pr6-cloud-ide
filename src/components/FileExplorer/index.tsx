@@ -100,13 +100,16 @@ const FileExplorer: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (mounted.current) return;
-        mounted.current = true;
-        fetchFileTree().then(setFileTree);
         workspaceSocket.on("files:refresh", async () => {
             const tree = await fetchFileTree();
             setFileTree(tree);
         });
+        if (mounted.current) return;
+        mounted.current = true;
+        fetchFileTree().then(setFileTree);
+        return () => {
+            workspaceSocket.off("files:refresh");
+        };
     }, []);
 
     return (

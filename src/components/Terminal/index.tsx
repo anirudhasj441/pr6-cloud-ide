@@ -12,6 +12,9 @@ const IntegratedTerminal: React.FC = () => {
 
     useEffect(() => {
         console.log("mounted: ", mounted.current);
+        workspaceSocket.on("terminal:data", (data) => {
+            terminal.current?.write(data);
+        });
         if (mounted.current) return;
         if (!terminal.current)
             terminal.current = new Terminal({
@@ -22,16 +25,14 @@ const IntegratedTerminal: React.FC = () => {
         if (terminalRef.current) terminal.current.open(terminalRef.current);
         console.log("emitting...");
         workspaceSocket.emit("terminal:write", "\n");
-        workspaceSocket.on("terminal:data", (data) => {
-            terminal.current?.write(data);
-        });
+
         terminal.current.onData((data: string) => {
             workspaceSocket.emit("terminal:write", data);
         });
         return () => {
             mounted.current = true;
             console.log("unmount terminal..");
-            // workspaceSocket.off("terminal:data");
+            workspaceSocket.off("terminal:data");
         };
     }, []);
 
