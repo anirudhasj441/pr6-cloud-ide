@@ -13,6 +13,7 @@ const IntegratedTerminal: React.FC = () => {
 
     useEffect(() => {
         if (mounted.current) return;
+        mounted.current = true;
         if (!terminal.current)
             terminal.current = new Terminal({
                 cols: 80,
@@ -31,7 +32,7 @@ const IntegratedTerminal: React.FC = () => {
         });
 
         return () => {
-            mounted.current = true;
+            // socket.current?.disconnect();
         };
     }, []);
 

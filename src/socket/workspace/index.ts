@@ -7,6 +7,11 @@ export default class WorkspaceSocket {
         this._socket = io(url);
     }
 
+    disconnect = () => {
+        this._socket.disconnect();
+        this._socket.close();
+    };
+
     get socket() {
         return this._socket;
     }

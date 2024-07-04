@@ -124,7 +124,11 @@ const WorkSpaceLayout: React.FC = () => {
                                     <Outlet />
                                 </div>
                                 <Pane minSize={0} maxSize={"100%"}>
-                                    <IntegratedTerminal />
+                                    {typeof terminalSplitSizes[1] ===
+                                        "number" &&
+                                        terminalSplitSizes[1] > 0 && (
+                                            <IntegratedTerminal />
+                                        )}
                                 </Pane>
                             </SplitPane>
                             {/* <div className="h-full w-full bg-red-500"></div> */}
