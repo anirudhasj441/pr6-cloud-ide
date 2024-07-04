@@ -1,18 +1,5 @@
 import { io } from "socket.io-client";
 
-export default class WorkspaceSocket {
-    private _socket;
+const workspaceSocket = io("http://127.0.0.1:8000");
 
-    constructor(url: string) {
-        this._socket = io(url);
-    }
-
-    disconnect = () => {
-        this._socket.disconnect();
-        this._socket.close();
-    };
-
-    get socket() {
-        return this._socket;
-    }
-}
+export default workspaceSocket;

@@ -24,6 +24,7 @@ import {
 } from "@mui/x-tree-view";
 import { useTreeItem2 } from "@mui/x-tree-view/useTreeItem2/useTreeItem2";
 import { Box } from "@mui/material";
+import workspaceSocket from "../../socket/workspace";
 
 const TreeNode = forwardRef(
     (props: TreeItem2Props, ref: Ref<HTMLLIElement> | undefined) => {
@@ -91,7 +92,7 @@ const FileExplorer: React.FC = () => {
         console.log(itemId, ": ", isSelected);
     };
 
-    const fetcFileTree = useCallback(async () => {
+    const fetchFileTree = useCallback(async () => {
         const url = "http://127.0.0.1:8000/list_dir";
         const res = await fetch(url);
         const tree = await res.json();
@@ -101,7 +102,11 @@ const FileExplorer: React.FC = () => {
     useEffect(() => {
         if (mounted.current) return;
         mounted.current = true;
-        fetcFileTree().then(setFileTree);
+        fetchFileTree().then(setFileTree);
+        workspaceSocket.on("files:refresh", async () => {
+            const tree = await fetchFileTree();
+            setFileTree(tree);
+        });
     }, []);
 
     return (
