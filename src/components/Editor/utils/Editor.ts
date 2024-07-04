@@ -1,4 +1,4 @@
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import monokai_theme from "../editor-theme/monokai.json?url";
 
 export default class CodeEditor {
@@ -8,9 +8,8 @@ export default class CodeEditor {
     constructor(container: HTMLDivElement | null) {
         console.log("monokai_theme: ", monokai_theme);
         if (!container) return;
-        if(this._editor !== null) return;
+        if (this._editor !== null) return;
         this._editor = monaco.editor.create(container, {
-            value: "",
             language: "typescript",
             theme: "vs-dark",
             automaticLayout: true,
@@ -20,8 +19,7 @@ export default class CodeEditor {
         });
 
         this._editorModel = monaco.editor.createModel("", "typescript");
-
-        console.log("_editorModel: ", this._editorModel)
+        this._editor.setModel(this._editorModel);
 
         this.setTheme();
     }

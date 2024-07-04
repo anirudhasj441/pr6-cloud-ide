@@ -7,7 +7,6 @@ import React, {
     useRef,
     useCallback,
 } from "react";
-import { TreeViewBaseItem } from "@mui/x-tree-view/models";
 import { RichTreeView } from "@mui/x-tree-view/RichTreeView";
 import FolderRoundedIcon from "@mui/icons-material/FolderRounded";
 import FolderOpenRoundedIcon from "@mui/icons-material/FolderOpenRounded";
@@ -15,16 +14,29 @@ import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRound
 import {
     TreeItem2Content,
     TreeItem2GroupTransition,
-    TreeItem2Icon,
+    // TreeItem2Icon,
     TreeItem2IconContainer,
     TreeItem2Label,
     TreeItem2Props,
     TreeItem2Provider,
     TreeItem2Root,
+    useTreeViewApiRef,
 } from "@mui/x-tree-view";
 import { useTreeItem2 } from "@mui/x-tree-view/useTreeItem2/useTreeItem2";
 import { Box } from "@mui/material";
 import workspaceSocket from "../../socket/workspace";
+
+interface ITreeNode {
+    id: string;
+    label: string;
+    path: string;
+    type: "file" | "folder";
+    children?: ITreeNode[];
+}
+
+interface FileExplorerProps {
+    onFileSelect: (path: string) => void;
+}
 
 const TreeNode = forwardRef(
     (props: TreeItem2Props, ref: Ref<HTMLLIElement> | undefined) => {
@@ -36,14 +48,15 @@ const TreeNode = forwardRef(
             children,
             ...other
         }: TreeItem2Props = props;
-        // other
+
         const {
             getRootProps,
             getContentProps,
             getLabelProps,
             getGroupTransitionProps,
             getIconContainerProps,
-            status,
+            // status,
+            publicAPI,
         } = useTreeItem2({
             id,
             itemId,
@@ -52,6 +65,9 @@ const TreeNode = forwardRef(
             disabled,
             rootRef: ref,
         });
+
+        const node = publicAPI.getItem(itemId);
+
         return (
             <TreeItem2Provider itemId={itemId}>
                 <TreeItem2Root
@@ -61,11 +77,18 @@ const TreeNode = forwardRef(
                 >
                     <TreeItem2Content {...getContentProps()}>
                         <TreeItem2IconContainer {...getIconContainerProps()}>
-                            <TreeItem2Icon status={status} />
+                            {node.type == "folder" ? (
+                                <FolderRoundedIcon />
+                            ) : (
+                                <InsertDriveFileRoundedIcon />
+                            )}
+
+                            {/* <TreeItem2Icon status={status} /> */}
                         </TreeItem2IconContainer>
                         <Box sx={{ flexGrow: 1, display: "flex", gap: 1 }}>
                             {/* <TreeItem2Checkbox {...getCheckboxProps()} /> */}
                             <TreeItem2Label {...getLabelProps()} />
+                            {/* {node.type} */}
                         </Box>
                     </TreeItem2Content>
                     {children && (
@@ -79,9 +102,12 @@ const TreeNode = forwardRef(
     }
 );
 
-const FileExplorer: React.FC = () => {
+const FileExplorer: React.FC<FileExplorerProps> = (
+    props: FileExplorerProps
+) => {
     const mounted = useRef<boolean>(false);
-    const [FileTree, setFileTree] = useState<TreeViewBaseItem[]>([]);
+    const [FileTree, setFileTree] = useState<ITreeNode[]>([]);
+    const treeApiRef = useTreeViewApiRef();
 
     const onNodeSelect = (
         event: SyntheticEvent,
@@ -89,7 +115,11 @@ const FileExplorer: React.FC = () => {
         isSelected: boolean
     ) => {
         event;
-        console.log(itemId, ": ", isSelected);
+        const node: ITreeNode = treeApiRef.current?.getItem(itemId);
+        if (node.type == "folder") return;
+        if (!isSelected) return;
+        console.log(node.type);
+        props.onFileSelect(node.path);
     };
 
     const fetchFileTree = useCallback(async () => {
@@ -122,6 +152,7 @@ const FileExplorer: React.FC = () => {
                     endIcon: InsertDriveFileRoundedIcon,
                     item: TreeNode,
                 }}
+                apiRef={treeApiRef}
                 onItemSelectionToggle={onNodeSelect}
             />
         </>
