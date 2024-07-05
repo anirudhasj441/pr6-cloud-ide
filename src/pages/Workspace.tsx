@@ -4,16 +4,19 @@ import {
     ListItemIcon,
     SwipeableDrawer,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import FileCopyTwoToneIcon from "@mui/icons-material/FileCopyOutlined";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import FileExplorer from "../components/FileExplorer";
 import SplitPane, { Pane } from "split-pane-react";
 import "split-pane-react/esm/themes/default.css";
 import IntegratedTerminal from "../components/Terminal";
 import Editor from "../components/Editor";
 
+import FileCopyTwoToneIcon from "@mui/icons-material/FileCopyOutlined";
+import TerminalIcon from "@mui/icons-material/Terminal";
+
 const Workspace: React.FC = () => {
     const [explorerState, setExplorerState] = useState(false);
+    const [terminalState, setTerminalState] = useState(false);
     const [splitSizes, setSplitSizes] = useState([0, "auto"]);
     const [terminalSplitSizes, setTerminalSplitSizes] = useState(["auto", 0]);
     const [selectedFile, setSelectedFile] = useState<string>("");
@@ -23,13 +26,21 @@ const Workspace: React.FC = () => {
         setExplorerState(!explorerState);
     };
 
+    const toggleTerminalDrawer = useCallback(() => {
+        setTerminalSplitSizes(["auto", !terminalState ? 260 : 0]);
+        setTerminalState(!terminalState);
+    }, [terminalState]);
+
     useEffect(() => {
         console.log("SPLIT: ", splitSizes);
         if (typeof splitSizes[0] === "number") {
             setExplorerState(splitSizes[0] > 0);
         }
+        if (typeof terminalSplitSizes[1] === "number") {
+            setTerminalState(terminalSplitSizes[1] > 0);
+        }
         // return () => {};
-    }, [splitSizes]);
+    }, [splitSizes, terminalSplitSizes]);
 
     return (
         <>
@@ -64,6 +75,34 @@ const Workspace: React.FC = () => {
                                 />
                             </ListItemIcon>
                         </ListItemButton>
+                        <ListItemButton
+                            selected={terminalState}
+                            sx={{
+                                "&.Mui-selected": {
+                                    backgroundColor: "transparent",
+                                    position: "relative",
+                                    "&::before": {
+                                        content: '""',
+                                        position: "absolute",
+                                        width: "0.15rem",
+                                        height: "100%",
+                                        top: 0,
+                                        left: 0,
+                                        backgroundColor: "white",
+                                    },
+                                },
+                            }}
+                            onClick={toggleTerminalDrawer}
+                        >
+                            <ListItemIcon style={{ minWidth: 0 }}>
+                                <TerminalIcon
+                                    fontSize="medium"
+                                    style={{
+                                        opacity: terminalState ? 1 : 0.65,
+                                    }}
+                                />
+                            </ListItemIcon>
+                        </ListItemButton>
                     </List>
                 </div>
                 <div className="flex-grow flex">
@@ -72,6 +111,7 @@ const Workspace: React.FC = () => {
                         sizes={splitSizes}
                         onChange={setSplitSizes}
                         sashRender={() => null}
+                        resizerSize={10}
                     >
                         <Pane minSize={0} maxSize="80%">
                             <SwipeableDrawer
@@ -132,4 +172,4 @@ const Workspace: React.FC = () => {
     );
 };
 
-export default Workspace;
+export default memo(Workspace);

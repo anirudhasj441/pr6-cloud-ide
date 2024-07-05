@@ -1,5 +1,7 @@
 import { io } from "socket.io-client";
 
-const workspaceSocket = io("http://127.0.0.1:8000");
+console.log(import.meta.env.VITE_SERVER_URL);
+
+const workspaceSocket = io(import.meta.env.VITE_SERVER_URL);
 
 export default workspaceSocket;

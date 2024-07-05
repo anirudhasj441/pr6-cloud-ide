@@ -6,6 +6,7 @@ import React, {
     useEffect,
     useRef,
     useCallback,
+    memo,
 } from "react";
 import { RichTreeView } from "@mui/x-tree-view/RichTreeView";
 import FolderRoundedIcon from "@mui/icons-material/FolderRounded";
@@ -123,7 +124,7 @@ const FileExplorer: React.FC<FileExplorerProps> = (
     };
 
     const fetchFileTree = useCallback(async () => {
-        const url = "http://127.0.0.1:8000/list_dir";
+        const url = import.meta.env.VITE_SERVER_URL + "/list_dir";
         const res = await fetch(url);
         const tree = await res.json();
         return tree.tree;
@@ -159,4 +160,4 @@ const FileExplorer: React.FC<FileExplorerProps> = (
     );
 };
 
-export default FileExplorer;
+export default memo(FileExplorer);

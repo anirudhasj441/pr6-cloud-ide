@@ -33,8 +33,20 @@ export default class CodeEditor {
         monaco.editor.setTheme("monokai");
     };
 
+    public onTextChange = (callback: (content: string | undefined) => void) => {
+        console.log("setting...");
+        this._editorModel?.onDidChangeContent(() => {
+            console.log("changed!!");
+            callback(this.getText());
+        });
+    };
+
     public setText = (text: string): void => {
         this._editorModel?.setValue(text);
+    };
+
+    public getText = (): string | undefined => {
+        return this._editorModel?.getValue();
     };
 
     public dispose = (): void => {
