@@ -41,6 +41,13 @@ export default class CodeEditor {
         });
     };
 
+    public onSave = (callback: () => void) => {
+        this._editor?.addCommand(
+            monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS,
+            callback
+        );
+    };
+
     public setText = (text: string): void => {
         this._editorModel?.setValue(text);
     };

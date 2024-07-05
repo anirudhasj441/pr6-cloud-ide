@@ -12,7 +12,12 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
 import "./index.css";
-import './userWorker.ts';
+import "./userWorker.ts";
+
+window.addEventListener("keydown", (event: KeyboardEvent) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === "s")
+        event.preventDefault();
+});
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>

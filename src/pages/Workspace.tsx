@@ -154,7 +154,7 @@ const Workspace: React.FC = () => {
                                 sashRender={() => null}
                             >
                                 <div className="h-full">
-                                    <Editor filePath={selectedFile} />
+                                    <Editor file={selectedFile} />
                                 </div>
                                 <Pane minSize={0} maxSize={"100%"}>
                                     {typeof terminalSplitSizes[1] ===

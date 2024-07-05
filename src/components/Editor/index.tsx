@@ -7,13 +7,15 @@ import SaveIcon from "@mui/icons-material/Save";
 import { IconButton } from "@mui/material";
 
 interface EditorProps {
-    filePath: string;
+    file: string;
 }
 
 const Editor: React.FC<EditorProps> = (props: EditorProps) => {
     console.log("Editor rendering..");
     const [editor, setEditor] = useState<CodeEditor | undefined>(undefined);
+    const [fileSaved, setFileSaved] = useState<boolean>(false);
     const editorRef = useRef(null);
+    const fileContent = useRef<string | undefined>(undefined);
     const mounted = useRef<boolean>(false);
 
     const createEditor = () => {
@@ -25,30 +27,48 @@ const Editor: React.FC<EditorProps> = (props: EditorProps) => {
         return new_editor;
     };
 
-    const fetchFileContent = useCallback(async () => {
-        if (!props.filePath || props.filePath === "") return;
+    const fetchFileContent = useCallback(async (): Promise<
+        string | undefined
+    > => {
+        if (!props.file || props.file === "") return;
         const url: string = import.meta.env.VITE_SERVER_URL + "/open_file";
 
         const res = await fetch(url, {
             method: "POST",
             headers: [["Content-Type", "Application/json"]],
-            body: JSON.stringify({ filePath: props.filePath }),
+            body: JSON.stringify({ filePath: props.file }),
         });
         const response = await res.json();
         // editor?.setText(response.content);
         return response.content;
-    }, [props.filePath]);
+    }, [props.file]);
 
     const save = () => {
-        console.log(props.filePath);
-        workspaceSocket.emit("file:save", props.filePath, editor?.getText());
+        console.log(props.file);
+        workspaceSocket.emit("file:save", props.file, editor?.getText());
+
+        fileContent.current = editor?.getText();
+        setFileSaved(true);
     };
 
     useEffect(() => {
-        console.log("filePath: ", props.filePath);
-        if (!props.filePath || props.filePath === "") return;
-        fetchFileContent().then(editor?.setText);
-    }, [props.filePath]);
+        console.log("file: ", props.file);
+        if (!props.file || props.file === "") return;
+        fetchFileContent().then((content: string | undefined) => {
+            if (!content) return;
+            fileContent.current = content;
+            editor?.setText(content);
+        });
+
+        editor?.onSave(save);
+        editor?.onTextChange(async (content) => {
+            content;
+            // const timer = setTimeout(async () => {
+
+            setFileSaved(content === fileContent.current);
+            // }, 1000);
+        });
+    }, [props.file]);
 
     useEffect(() => {
         console.log(mounted.current);
@@ -71,11 +91,16 @@ const Editor: React.FC<EditorProps> = (props: EditorProps) => {
             <div id="editor" className="h-full w-full flex flex-col">
                 <div className=" bg-[#272822] flex">
                     <div className="text-sm">
-                        {props.filePath &&
-                            props.filePath
-                                .split("/root/")[1]
-                                .split("/")
-                                .join(" > ")}
+                        <span>
+                            {props.file &&
+                                props.file
+                                    .split("/root/")[1]
+                                    .split("/")
+                                    .join(" > ")}{" "}
+                        </span>
+                        {!fileSaved && (
+                            <span className="opacity-[0.65]">unsaved</span>
+                        )}
                     </div>
                     <div className="flex-grow text-right">
                         <IconButton onClick={save}>
