@@ -20,6 +20,8 @@ const Workspace: React.FC = () => {
     const [splitSizes, setSplitSizes] = useState([0, "auto"]);
     const [terminalSplitSizes, setTerminalSplitSizes] = useState(["auto", 0]);
     const [selectedFile, setSelectedFile] = useState<string>("");
+    const [selectedFileRelativePath, setSelectedFileRelativePath] =
+        useState<string>("");
 
     const toggleDrawer = (): void => {
         setSplitSizes([!explorerState ? 260 : 0, "auto"]);
@@ -30,6 +32,11 @@ const Workspace: React.FC = () => {
         setTerminalSplitSizes(["auto", !terminalState ? 260 : 0]);
         setTerminalState(!terminalState);
     }, [terminalState]);
+
+    const onFileSelect = useCallback((path: string, relativePath: string) => {
+        setSelectedFile(path);
+        setSelectedFileRelativePath(relativePath);
+    }, []);
 
     useEffect(() => {
         console.log("SPLIT: ", splitSizes);
@@ -143,7 +150,7 @@ const Workspace: React.FC = () => {
                                         EXPLORER
                                     </div>
                                 </div>
-                                <FileExplorer onFileSelect={setSelectedFile} />
+                                <FileExplorer onFileSelect={onFileSelect} />
                             </SwipeableDrawer>
                         </Pane>
                         <div className=" flex-grow h-full flex flex-col">
@@ -154,7 +161,10 @@ const Workspace: React.FC = () => {
                                 sashRender={() => null}
                             >
                                 <div className="h-full">
-                                    <Editor file={selectedFile} />
+                                    <Editor
+                                        file={selectedFile}
+                                        relativePath={selectedFileRelativePath}
+                                    />
                                 </div>
                                 <Pane minSize={0} maxSize={"100%"}>
                                     {typeof terminalSplitSizes[1] ===

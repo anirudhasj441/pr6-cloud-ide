@@ -31,12 +31,13 @@ interface ITreeNode {
     id: string;
     label: string;
     path: string;
+    relativePath: string;
     type: "file" | "folder";
     children?: ITreeNode[];
 }
 
 interface FileExplorerProps {
-    onFileSelect: (path: string) => void;
+    onFileSelect: (path: string, relativePath: string) => void;
 }
 
 const TreeNode = forwardRef(
@@ -120,7 +121,7 @@ const FileExplorer: React.FC<FileExplorerProps> = (
         if (node.type == "folder") return;
         if (!isSelected) return;
         console.log(node.type);
-        props.onFileSelect(node.path);
+        props.onFileSelect(node.path, node.relativePath);
     };
 
     const fetchFileTree = useCallback(async () => {

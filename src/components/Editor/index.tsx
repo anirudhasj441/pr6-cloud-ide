@@ -8,6 +8,7 @@ import { IconButton } from "@mui/material";
 
 interface EditorProps {
     file: string;
+    relativePath: string;
 }
 
 const Editor: React.FC<EditorProps> = (props: EditorProps) => {
@@ -55,7 +56,7 @@ const Editor: React.FC<EditorProps> = (props: EditorProps) => {
         console.log("file: ", props.file);
         if (!props.file || props.file === "") return;
         fetchFileContent().then((content: string | undefined) => {
-            if (!content) return;
+            if (content === undefined) return;
             fileContent.current = content;
             editor?.setText(content);
         });
@@ -90,13 +91,10 @@ const Editor: React.FC<EditorProps> = (props: EditorProps) => {
         <>
             <div id="editor" className="h-full w-full flex flex-col">
                 <div className=" bg-[#272822] flex">
-                    <div className="text-sm">
+                    <div className="text-sm flex gap-2">
                         <span>
-                            {props.file &&
-                                props.file
-                                    .split("/root/")[1]
-                                    .split("/")
-                                    .join(" > ")}{" "}
+                            {props.relativePath &&
+                                props.relativePath.split("/").join(" > ")}
                         </span>
                         {!fileSaved && (
                             <span className="opacity-[0.65]">unsaved</span>
