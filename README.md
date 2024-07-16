@@ -1,30 +1,40 @@
-# React + TypeScript + Vite
+![DEVil Editor](./docs/main_logo6.png) <br>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# DEVIL EDITOR
 
-Currently, two official plugins are available:
+The "DEVIL EDITOR" is a cloud-based Integrated Development Environment (IDE) that enables users to write, edit, and execute code directly from a web browser without needing to install any compilers or development software.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+-   **Code Editor:** Supports multiple programming languages with syntax highlighting, auto-completion, and error detection.
+-   **Terminal Access:** Integrated bash terminal providing access to a Linux (Ubuntu) system.
+-   **Containerized Environment:** Each project runs in a Docker container for isolated and consistent environments.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Technologies Used
 
-- Configure the top-level `parserOptions` property like this:
+### Frontend:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+-   React JS
+-   React Router DOM
+-   Tailwind CSS
+-   Material UI (MUI)
+-   VITE
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Backend
+
+-   Node js
+-   Express js
+
+### Terminal Emulator
+
+-   Xterm js
+-   node-pty
+
+### Containerization
+
+-   Docker
+
+### Version Control
+
+-   Git
+-   Github

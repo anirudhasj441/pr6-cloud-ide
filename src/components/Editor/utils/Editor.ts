@@ -1,4 +1,4 @@
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import monokai_theme from "../editor-theme/monokai.json?url";
 
 export default class CodeEditor {
@@ -8,10 +8,9 @@ export default class CodeEditor {
     constructor(container: HTMLDivElement | null) {
         console.log("monokai_theme: ", monokai_theme);
         if (!container) return;
-        if(this._editor !== null) return;
+        if (this._editor !== null) return;
         this._editor = monaco.editor.create(container, {
-            value: "",
-            language: "javascript",
+            language: "typescript",
             theme: "vs-dark",
             automaticLayout: true,
             scrollbar: {
@@ -20,8 +19,7 @@ export default class CodeEditor {
         });
 
         this._editorModel = monaco.editor.createModel("", "typescript");
-
-        console.log("_editorModel: ", this._editorModel)
+        this._editor.setModel(this._editorModel);
 
         this.setTheme();
     }
@@ -35,8 +33,27 @@ export default class CodeEditor {
         monaco.editor.setTheme("monokai");
     };
 
+    public onTextChange = (callback: (content: string | undefined) => void) => {
+        console.log("setting...");
+        this._editorModel?.onDidChangeContent(() => {
+            console.log("changed!!");
+            callback(this.getText());
+        });
+    };
+
+    public onSave = (callback: () => void) => {
+        this._editor?.addCommand(
+            monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS,
+            callback
+        );
+    };
+
     public setText = (text: string): void => {
         this._editorModel?.setValue(text);
+    };
+
+    public getText = (): string | undefined => {
+        return this._editorModel?.getValue();
     };
 
     public dispose = (): void => {

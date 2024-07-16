@@ -1,5 +1,4 @@
 import { RouteObject } from "react-router-dom";
-import WorkSpaceLayout from "../layout/WorkSpaceLayout";
 import Workspace from "../pages/Workspace";
 import App from "../App";
 
@@ -10,13 +9,7 @@ const routes: RouteObject[] = [
     },
     {
         path: "/workspace/",
-        element: <WorkSpaceLayout />,
-        children: [
-            {
-                path: "",
-                element: <Workspace />,
-            },
-        ],
+        element: <Workspace />,
     },
 ];
 
