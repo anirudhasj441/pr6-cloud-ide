@@ -13,6 +13,7 @@ import Editor from "../components/Editor";
 
 import FileCopyTwoToneIcon from "@mui/icons-material/FileCopyOutlined";
 import TerminalIcon from "@mui/icons-material/Terminal";
+import EditorPlaceholder from "../components/Editor/EditorPlaceholder";
 
 const Workspace: React.FC = () => {
     const [explorerState, setExplorerState] = useState(false);
@@ -139,6 +140,7 @@ const Workspace: React.FC = () => {
                                     overflowX: "hidden",
                                     textWrap: "nowrap",
                                     "& .MuiPaper-root": {
+                                        backgroundColor: "#1a1a1aff",
                                         position: "relative",
                                         overflowX: "hidden",
                                         transition: "none",
@@ -161,10 +163,16 @@ const Workspace: React.FC = () => {
                                 sashRender={() => null}
                             >
                                 <div className="h-full">
-                                    <Editor
-                                        file={selectedFile}
-                                        relativePath={selectedFileRelativePath}
-                                    />
+                                    {selectedFile ? (
+                                        <Editor
+                                            file={selectedFile}
+                                            relativePath={
+                                                selectedFileRelativePath
+                                            }
+                                        />
+                                    ) : (
+                                        <EditorPlaceholder />
+                                    )}
                                 </div>
                                 <Pane minSize={0} maxSize={"100%"}>
                                     {typeof terminalSplitSizes[1] ===
