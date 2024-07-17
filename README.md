@@ -2,7 +2,7 @@
 
 # DEVIL EDITOR
 
-The "DEVIL EDITOR" is a cloud-based Integrated Development Environment (IDE) that enables users to write, edit, and execute code directly from a web browser without needing to install any compilers or development software.
+Devil Editor is an entirely web-based Integrated Development Environment (IDE) that enables users to write, edit, and execute code directly from a web browser without needing to install any compilers or development software.
 
 ## Features
 
