@@ -69,7 +69,7 @@ const Editor: React.FC<EditorProps> = (props: EditorProps) => {
             setFileSaved(content === fileContent.current);
             // }, 1000);
         });
-    }, [props.file]);
+    }, [props.file, editor]);
 
     useEffect(() => {
         console.log(mounted.current);
